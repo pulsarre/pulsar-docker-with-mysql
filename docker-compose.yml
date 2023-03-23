@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file: ./mysql.properties
+    ports:
+      - $MYSQL_EXPOSE_PORT:3306
+    volumes:
+      - db:/var/lib/mysql
+  pulsar-app:
+    image: sevketriza/pulsar-app:latest
+    depends_on:
+      - mysqldb
+    restart: on-failure
+    env_file: ./pulsar-app.properties
+    ports:
+      - $API_EXPOSE_PORT:8081
+    stdin_open: true
+    tty: true
+  pulsar-ui:
+    image: sevketriza/pulsar-ui:latest
+    depends_on:
+      - pulsar-app
+    restart: on-failure
+    env_file: ./pulsar-ui.properties
+    ports:
+      - $UI_EXPOSE_PORT:80
+volumes:
+  db:
