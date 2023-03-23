@@ -8,20 +8,20 @@ services:
       - $MYSQL_EXPOSE_PORT:3306
     volumes:
       - db:/var/lib/mysql
-  pulsar-app:
-    image: sevketriza/pulsar-app:latest
+  pulsar-api:
+    image: pulsarre/api:latest
     depends_on:
       - mysqldb
     restart: on-failure
-    env_file: ./pulsar-app.properties
+    env_file: ./pulsar-api.properties
     ports:
       - $API_EXPOSE_PORT:8081
     stdin_open: true
     tty: true
   pulsar-ui:
-    image: sevketriza/pulsar-ui:latest
+    image: pulsarre/ui:latest
     depends_on:
-      - pulsar-app
+      - pulsar-api
     restart: on-failure
     env_file: ./pulsar-ui.properties
     ports:
